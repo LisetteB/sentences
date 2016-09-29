@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+	
+	<head>
+		<title>make your own sentences</title>
+	</head>
+	<f:view>
+		<h2>Sentence</h2>
+		<h:form>
+			<h:outputText value="#{database.sentence}"/>
+			<h:commandButton action="#{database.computeSentence(database.sentence)}" value="compute sentence" />
+			<h:outputText value="#{database.wellFormed}" />
+			
+		</h:form>
+		
+		<h2>Database</h2>
+		
+		<h:form>
+			<h:dataTable var="_element" value="#{database.elements}">
+			<h:column>
+				<f:facet name="header">word</f:facet>
+
+				<h:commandLink value="#{_element}" action="#{database.addToSentence(_element)}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">type</f:facet>
+				#{_element.type.typeComplete}
+			</h:column>
+		</h:dataTable>
+		</h:form>
+		
+	</f:view>
+
+</html>

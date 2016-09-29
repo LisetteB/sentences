@@ -35,6 +35,7 @@ public class Element {
 	}
 	
 	/*
+	 * mergeRight and mergeLeft return a new Element that's a combination of two other elements
 	 * "np/n -> rechts een n geeft np
 	 */
 	public void mergeRight(Element rightElement){

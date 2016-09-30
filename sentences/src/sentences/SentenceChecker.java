@@ -28,13 +28,23 @@ public class SentenceChecker implements Serializable {
 	}
 	
 	public void setDatabase(){
-		database = new ArrayList<Element>();
-		database.add(new Element("chat", new Type("n")));
-		database.add(new Element("le", new Type("np/n")));
-		database.add(new Element("chien", new Type("n")));
-		database.add(new Element("dort", new Type("np\\s")));
-		database.add(new Element("jean", new Type("np")));
-		database.add(new Element("mange", new Type("(np\\s)/np")));
+		try {
+			DatabaseConnection dbc = new DatabaseConnection();
+			database = dbc.getDatabase();
+			System.out.println("database is correct opgehaald en bevat de volgende elementen: ");
+			System.out.println(database);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("for some weird reason, the connection could be not made, I'm sorry I cannot help you ");
+			System.out.println("because I was to lazy to throw and catch more specific exceptions");
+			database = new ArrayList<Element>();
+			database.add(new Element("chat", new Type("n")));
+			database.add(new Element("le", new Type("np/n")));
+			database.add(new Element("chien", new Type("n")));
+			database.add(new Element("dort", new Type("np\\s")));
+			database.add(new Element("jean", new Type("np")));
+			database.add(new Element("mange", new Type("(np\\s)/np")));		
+		}
 	}
 
 	public Sentence getSentence() {
@@ -55,7 +65,6 @@ public class SentenceChecker implements Serializable {
 	
 	public String addToSentence(Element e){
 		sentence.addToSentence(e);
-		System.out.println("the complete sentence is now " + sentence);
 		return null;
 	}
 	public String clearSentence(){
@@ -79,7 +88,9 @@ public class SentenceChecker implements Serializable {
 		Sentence s = new Sentence();
 		s.addToSentence(sc.database.get(1));
 		s.addToSentence(sc.database.get(2));
-		s.addToSentence(sc.database.get(3));
+		//s.addToSentence(sc.database.get(3));
+		System.out.print("de sentence die gecontroleerd wordt: ");
+		System.out.println(s);	
 		System.out.println(s.isSentence());			
 	}
 }

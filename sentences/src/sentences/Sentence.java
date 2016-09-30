@@ -12,7 +12,6 @@ public class Sentence {
 	
 	public void addToSentence(Element e){
 		sentence.add(e);
-		System.out.println("from Sentence class: now the complete sentence will be " + sentence);
 	}
 	
 	Sentence(){
@@ -24,7 +23,6 @@ public class Sentence {
 		for(int i=0; i<sentence.size(); i++){
 			stringRepresentation += sentence.get(i).getWordSequence() + " ";
 		}
-		System.out.println("the toString method is called " + stringRepresentation);
 		return stringRepresentation;
 	}
 	

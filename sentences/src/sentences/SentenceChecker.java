@@ -1,8 +1,5 @@
 package sentences;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -10,44 +7,16 @@ import java.io.Serializable;
 @Named
 @SessionScoped
 public class SentenceChecker implements Serializable {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Element> database;
 	private Sentence sentence;
 	private String result;
-	
+
 	public String getResult(){
 		return this.result;
-	}
-	
-	public List<Element> getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(){
-		System.out.println("tried to set the database");
-		database = new DatabaseConnection().getDatabase();
-		
-//		try {
-//			DatabaseConnection dbc = new DatabaseConnection();
-//			database = dbc.getDatabase();
-//			System.out.println("database is correct opgehaald en bevat de volgende elementen: ");
-//			System.out.println(database);
-//		} catch (Exception e) {
-//			System.out.println("failed to set the database");
-//			e.printStackTrace();
-//			
-//			database = new ArrayList<Element>();
-//			database.add(new Element("chat", new Type("n")));
-//			database.add(new Element("le", new Type("np/n")));
-//			database.add(new Element("chien", new Type("n")));
-//			database.add(new Element("dort", new Type("np\\s")));
-//			database.add(new Element("jean", new Type("np")));
-//			database.add(new Element("mange", new Type("(np\\s)/np")));		
-//		}
 	}
 
 	public Sentence getSentence() {
@@ -59,7 +28,7 @@ public class SentenceChecker implements Serializable {
 	}
 	
 	public SentenceChecker(){
-		setDatabase();		
+		//setDatabase();		
 		setSentence(new Sentence());
 	}
 	
@@ -82,15 +51,4 @@ public class SentenceChecker implements Serializable {
 		}
 		return null;
 	}
-	
-//	public static void main(String[] args){
-//		SentenceChecker sc = new SentenceChecker();
-//		Sentence s = new Sentence();
-//		s.addToSentence(sc.database.get(1));
-//		s.addToSentence(sc.database.get(2));
-//		//s.addToSentence(sc.database.get(3));
-//		System.out.print("de sentence die gecontroleerd wordt: ");
-//		System.out.println(s);	
-//		System.out.println(s.isSentence());			
-//	}
 }

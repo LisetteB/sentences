@@ -23,7 +23,7 @@
 		<h2>Database</h2>
 		
 		<h:form>
-			<h:dataTable var="_element" value="#{sentenceChecker.database}">
+			<h:dataTable var="_element" value="#{databaseController.database}">
 			<h:column>
 				<f:facet name="header">word</f:facet>
 
@@ -36,6 +36,17 @@
 		</h:dataTable>
 		</h:form>
 		
+		<h2>Add words</h2>
+		<h:form>
+			<h:inputText value="#{databaseController.word}"> 
+				id="word" 
+			</h:inputText>
+			<h:inputText value="#{databaseController.type}">
+				id="type"
+			</h:inputText>
+				
+			<h:commandButton value="add word" action="#{databaseController.insert}"/>
+		</h:form>
 	</f:view>
 
 </html>

@@ -79,6 +79,7 @@ public class Type implements IType{
 		
 	}
 	
+	@Override
 	public String toString(){
 		String s = "singleton: " + singleton + "\n";
 		s+= "needsLeftArgument: " + needsLeftArgument + "\n";

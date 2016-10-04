@@ -18,6 +18,7 @@ public class Sentence {
 		sentence = new ArrayList<>();
 	}
 	
+	@Override
 	public String toString(){
 		String stringRepresentation = "";
 		for(int i=0; i<sentence.size(); i++){

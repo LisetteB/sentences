@@ -26,25 +26,28 @@ public class SentenceChecker implements Serializable {
 	public List<Element> getDatabase() {
 		return database;
 	}
-	
+
 	public void setDatabase(){
-		try {
-			DatabaseConnection dbc = new DatabaseConnection();
-			database = dbc.getDatabase();
-			System.out.println("database is correct opgehaald en bevat de volgende elementen: ");
-			System.out.println(database);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("for some weird reason, the connection could be not made, I'm sorry I cannot help you ");
-			System.out.println("because I was to lazy to throw and catch more specific exceptions");
-			database = new ArrayList<Element>();
-			database.add(new Element("chat", new Type("n")));
-			database.add(new Element("le", new Type("np/n")));
-			database.add(new Element("chien", new Type("n")));
-			database.add(new Element("dort", new Type("np\\s")));
-			database.add(new Element("jean", new Type("np")));
-			database.add(new Element("mange", new Type("(np\\s)/np")));		
-		}
+		System.out.println("tried to set the database");
+		database = new DatabaseConnection().getDatabase();
+		
+//		try {
+//			DatabaseConnection dbc = new DatabaseConnection();
+//			database = dbc.getDatabase();
+//			System.out.println("database is correct opgehaald en bevat de volgende elementen: ");
+//			System.out.println(database);
+//		} catch (Exception e) {
+//			System.out.println("failed to set the database");
+//			e.printStackTrace();
+//			
+//			database = new ArrayList<Element>();
+//			database.add(new Element("chat", new Type("n")));
+//			database.add(new Element("le", new Type("np/n")));
+//			database.add(new Element("chien", new Type("n")));
+//			database.add(new Element("dort", new Type("np\\s")));
+//			database.add(new Element("jean", new Type("np")));
+//			database.add(new Element("mange", new Type("(np\\s)/np")));		
+//		}
 	}
 
 	public Sentence getSentence() {
@@ -58,9 +61,6 @@ public class SentenceChecker implements Serializable {
 	public SentenceChecker(){
 		setDatabase();		
 		setSentence(new Sentence());
-//		getSentence().add(database.get(1));
-//		getSentence().add(database.get(0));
-//		getSentence().add(database.get(3));
 	}
 	
 	public String addToSentence(Element e){
@@ -83,14 +83,14 @@ public class SentenceChecker implements Serializable {
 		return null;
 	}
 	
-	public static void main(String[] args){
-		SentenceChecker sc = new SentenceChecker();
-		Sentence s = new Sentence();
-		s.addToSentence(sc.database.get(1));
-		s.addToSentence(sc.database.get(2));
-		//s.addToSentence(sc.database.get(3));
-		System.out.print("de sentence die gecontroleerd wordt: ");
-		System.out.println(s);	
-		System.out.println(s.isSentence());			
-	}
+//	public static void main(String[] args){
+//		SentenceChecker sc = new SentenceChecker();
+//		Sentence s = new Sentence();
+//		s.addToSentence(sc.database.get(1));
+//		s.addToSentence(sc.database.get(2));
+//		//s.addToSentence(sc.database.get(3));
+//		System.out.print("de sentence die gecontroleerd wordt: ");
+//		System.out.println(s);	
+//		System.out.println(s.isSentence());			
+//	}
 }

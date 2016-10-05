@@ -91,45 +91,22 @@ public class DatabaseConnection{
 	}
 	
 	/*
-	 * insert is an overloaded method to add Element objects to the database, 
-	 * or to add just a word with its type. 
+	 * insert is an overloaded method to add an Element object to the database, 
+	 * you can use it either with an Element object, or just a String word and a String for the type
+	 * It tries to make the connection 
 	 */
-//	public void insert(Element e){
-//		try{
-//			Connection con = createConnection();
-//			
-//			String sql = "insert into elements (word_sequence, type)" + " values (?,?)";
-//			PreparedStatement statement = con.prepareStatement(sql);
-//			
-//			
-//			statement.setString(1, e.getWordSequence());
-//			statement.setString(2, e.getType().typeComplete);				
-//			statement.execute();	
-//			
-//			setDatabase(con);
-//			con.close();
-//		}catch(SQLException sqle){
-//			sqle.printStackTrace();
-//		}
-//		
-//	}
+
+	public void insert(Element e){
+		insert(e.getWordSequence(),e.getType().typeComplete);
+	}
+	
 	public void insert(String wordSequence, String type){
-		//Use the value of possibleInsert to tell if it is not possible to insert the element
+		//Use the value of possibleInsert to tell on the client side if the word was inserted correctly
 		possibleInsert = "";
 		try{
 			Connection con = createConnection();
 			
-			//first check if the element is included
-//			String sqlIncluded = "SELECT count(*) FROM elements WHERE word_sequence = ?";
-//			PreparedStatement statement = con.prepareStatement(sqlIncluded);
-//			statement.setString(1,wordSequence);
-//			ResultSet resultSet = statement.executeQuery();
-//			boolean isIncluded = resultSet.next();
-//			System.out.println(isIncluded);
-//			while(resultSet.next()){
-//				System.out.println("found another " + wordSequence);
-//			}
-			
+			//first check if the element is included			
 			String sqlIncluded = "select * from elements";
 			PreparedStatement statement = con.prepareStatement(sqlIncluded);
 			ResultSet result = statement.executeQuery();
@@ -144,7 +121,7 @@ public class DatabaseConnection{
 			//If the word is not included and if the word has a valid type, you can add it.
 			if(isIncluded){
 				possibleInsert += "The database already contains the word "+ wordSequence;
-			}else if(!new Type(type).correctType()){
+			}else if(!Type.correctType(type)){
 				possibleInsert += "This type does not exist "+ type;
 			}else{
 
@@ -162,13 +139,14 @@ public class DatabaseConnection{
 			con.close();
 		}catch(SQLException sqle){
 			sqle.printStackTrace();
+			possibleInsert += "The connection with the database could not be made";
 		}		
 	}
 	
 	public static void main(String[] args){
 				
 		DatabaseConnection dbc = new DatabaseConnection();
-		dbc.insert("marie", "np");
+		dbc.insert("et", "(s)");
 		System.out.println(dbc.database);
 		System.out.println(dbc.possibleInsert);
 	}

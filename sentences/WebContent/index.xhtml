@@ -6,24 +6,40 @@
 	
 	<head>
 		<title>make your own sentences</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap.css"/>
 	</head>
+	
 	<f:view>
-		<h2>Sentence</h2>
+		<div class="container">
+			<h2>Sentence</h2>
+		</div>
+		<div class="container">
 		<h:form>
-			<h:outputText value="#{sentenceChecker.sentence}"/>
-			<br></br>
-			<h:commandButton action="#{sentenceChecker.clearSentence}" value="clear sentence" />
-			<br></br>
-			<h:commandButton action="#{sentenceChecker.checkSentence}" value="check sentence" />
+			<div class="well">
+			<div class="row">
+				<div class="col-md-6">
+					<h4>
+						<h:outputText value="#{sentenceChecker.sentence}"/>
+					</h4>
+				</div>		
+				<div class="col-md-2">
+					<h:commandButton action="#{sentenceChecker.clearSentence}" value="clear sentence" class="btn btn-default"/>
+				</div>
+				<div class="col-md-2">
+					<h:commandButton action="#{sentenceChecker.checkSentence}" value="check sentence" class="btn btn-default"/>
+				</div>
+			</div>
+			</div>
 			<h:outputText value="#{sentenceChecker.result}" />
-
 			
 		</h:form>
-
+		</div>
+		
+		<div class="container">
 		<h2>Database</h2>
 		
 		<h:form>
-			<h:dataTable var="_element" value="#{databaseController.database}">
+			<h:dataTable var="_element" value="#{databaseController.database}" class="table table-striped">
 			<h:column>
 				<f:facet name="header">word</f:facet>
 
@@ -35,19 +51,26 @@
 			</h:column>
 		</h:dataTable>
 		</h:form>
+		</div>
 		
+		<div class="container">
 		<h2>Add words</h2>
-		<h:form>
-			Word: <h:inputText value="#{databaseController.word}"> 
-				id="word" 
-			</h:inputText>
-			Type: <h:inputText value="#{databaseController.type}">
-				id="type"
-			</h:inputText>
+		<h:form class="form-inline">
+			<div class="form-group">
+				Word: <h:inputText value="#{databaseController.word}" class="form-control"> 
+					id="word" 				
+				</h:inputText>
+			</div>
+			<div class="form-group">
+				Type: <h:inputText value="#{databaseController.type}" class="form-control">
+					id="type"
+				</h:inputText>
+			</div>	
 				
-			<h:commandButton value="add word" action="#{databaseController.insert}"/>
+			<h:commandButton value="add word" action="#{databaseController.insert}" class="btn btn-default"/>
 			<h:outputText value="#{databaseController.possibleInsert}"/>
 		</h:form>
-	</f:view>
+		</div>
+	</f:view>	
 
 </html>

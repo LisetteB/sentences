@@ -27,27 +27,21 @@ public class Type {
 		return typeComplete;
 	}
 	
-	
-	
 	/*
-	 * method that removes outer brackets if they are present and linked
-	 * if the first element is an opening bracket and
-	 * if the first closing bracket you encounter is at the end,
-	 * you know they are the only ones and can be removed
-	 * 
+	 * removeOuterBrackets, only if the first and last char are the opening and closing brackets
+	 * and if the type inside the bracket has correct brackets so with (np)/(np) you cannot remove the outer brackets 
 	 */
-	public String removeOuterBrackets(String t){
-		int numberOfChars = t.length();
-		if(t.startsWith("(")){
-			for(int letter=1; letter<numberOfChars; letter++){
-				if(t.charAt(letter) == ')' && letter == numberOfChars-1){
-					return(t.substring(1, numberOfChars-1));
-				}
+	public static String removeOuterBrackets(String t){
+		
+		if(t.startsWith("(") && t.endsWith(")")){
+			String withinBrackets = t.substring(1, t.length()-1);
+			if(correctBrackets(withinBrackets)){
+				return withinBrackets;
 			}
 		}
 		return t;
 	}
-	
+		
 	/*
 	 * method to fill all the member variables of a type
 	 */
@@ -91,40 +85,74 @@ public class Type {
 	}
 	
 	/*
-	 * correctType returns true if the typeComplete is wellFormed
-	 * this means that the brackets have an opening and ending bracket
-	 * and the only types used are np, n, s
-	 * the only other chars used are / and \\
+	 * a type is correct if the brackets are correctly formed
+	 * or if it is a singleton correct type
+	 * or if both sides are correct types
 	 */
-	public boolean correctType(){
-		Stack<Character> s = new Stack<Character>();
-		String[] typesAllowed = {"np","n","s"}; 
+	public static boolean correctType(String type){
+		return correctBrackets(type) && correctTypeRecursion(type);
+	}
+	
+	public static boolean correctTypeRecursion(String type){
+		//first remove outerbrackets if they exist
+		type = removeOuterBrackets(type);
 		
-		for(int i=0; i<typeComplete.length(); i++){
-			char c = typeComplete.charAt(i);
-			if(c == '('){
-				s.push('(');
-			}else if(c == ')' && s.pop() != '('){
-				return false;
-			}else if(i<typeComplete.length()-1 && contains(typesAllowed, ""+c+typeComplete.charAt(i+1))){
-					i++;
-					continue;
-			}else if(contains(typesAllowed, ""+c) || c == '\\' || c == '/'){
-				continue;
-			}else{
-				return false;
-			}
+		if(TypeExists(type)){
+			return true;
 		}
-		if(s.isEmpty()) return true;
-		else return false;
+		//If there is a / or \\ there also should be a left and right element.
+		else if(type.contains("/") || type.contains("\\")){
+			if(findElements(type).length ==2){
+				System.out.println(findElements(type)[0]+ " "+findElements(type)[1]);
+				return (correctTypeRecursion(findElements(type)[0]) && correctTypeRecursion(findElements(type)[1]));
+			}	
+		}
+		return false;
 	}
 	
 	/*
-	 * method written for correctType to check if an array contains a certain String
+	 * method to check if every opening bracket has a closing bracket
 	 */
-	private boolean contains(String[] myArr, String s){
-		for(int i=0; i<myArr.length; i++){
-			if(myArr[i].equals(s)){
+	public static boolean correctBrackets(String type){
+		Stack<Character> s = new Stack<Character>();
+		for(int i=0; i< type.length(); i++){
+			char c = type.charAt(i);
+			if(c == '('){
+				s.push(c);
+			}else if(c == ')' && s.pop() != '('){
+				//If there's no opening bracket on the stack, the closing bracket is incorrect
+				return false;
+			}
+		}
+		if(s.isEmpty()){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	public static String[] findElements(String type){
+		Stack<Character> s = new Stack<Character>();
+		for(int i=0; i< type.length(); i++){
+			char c = type.charAt(i);
+			if(c == '('){
+				s.push(c);
+			}else if(c == ')'){
+				s.pop();
+			}else if(s.isEmpty() && (c == '/' || c=='\\')){
+				return(new String[] {type.substring(0, i), type.substring(i+1)});
+			}	
+		}
+		return new String[] {};	
+	}
+	
+	/*
+	 * method written for correctType to check if the String is an existing type
+	 */
+	private static boolean TypeExists(String s){
+		String[] typesAllowed = {"np","n","s"}; 
+		for(int i=0; i<typesAllowed.length; i++){
+			if(typesAllowed[i].equals(s)){
 				return true;
 			}
 		}
@@ -132,8 +160,18 @@ public class Type {
 	}
 	
 	public static void main(String[] args){
-		Type t1 = new Type("np\\s/np");
-		System.out.println(t1);
+		Type t1 = new Type("s\\(s/s)");
+//		Type t2 = new Type("(s)");
+//		System.out.println(t2.removeOuterBrackets(t2.typeComplete));
+//		
+		System.out.println(removeOuterBrackets(t1.typeComplete));
+		String[] s = findElements(t1.typeComplete);
+		for(String s1 : s){
+			System.out.println(s1);
+		}
+		System.out.println(correctBrackets(t1.typeComplete));
+		System.out.println(correctType(t1.typeComplete));
 		
 	}
 }
+

@@ -12,7 +12,11 @@ public class DatabaseController {
 	private String word;
 	private String type;
 	private List<Element> database;
+	private String possibleInsert;
 	
+	public String getPossibleInsert() {
+		return possibleInsert;
+	}
 	public String getWord(){
 		return this.word;
 	}
@@ -31,15 +35,15 @@ public class DatabaseController {
 	
 	@PostConstruct
 	public void setDatabase(){
-		System.out.println("tried to set the database");
+		//System.out.println("tried to set the database");
 		DatabaseConnection dbc = new DatabaseConnection();
 		database = dbc.getDatabase();
 	}
 	public void insert(){
 		DatabaseConnection dbc = new DatabaseConnection();
 		dbc.insert(word, type);
-		setDatabase();
-		
+		possibleInsert = dbc.getPossibleInsert();
+		setDatabase();		
 	}
 	
 }

@@ -38,14 +38,15 @@
 		
 		<h2>Add words</h2>
 		<h:form>
-			<h:inputText value="#{databaseController.word}"> 
+			Word: <h:inputText value="#{databaseController.word}"> 
 				id="word" 
 			</h:inputText>
-			<h:inputText value="#{databaseController.type}">
+			Type: <h:inputText value="#{databaseController.type}">
 				id="type"
 			</h:inputText>
 				
 			<h:commandButton value="add word" action="#{databaseController.insert}"/>
+			<h:outputText value="#{databaseController.possibleInsert}"/>
 		</h:form>
 	</f:view>
 

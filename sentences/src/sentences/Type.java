@@ -1,8 +1,10 @@
 package sentences;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
-public class Type implements IType{
+public class Type {
 	boolean singleton;
 	boolean needsLeftArgument;
 	boolean needsRightArgument;
@@ -75,11 +77,9 @@ public class Type implements IType{
 			needsRightArgument = false;
 			typeLeft = null;
 			typeRight = null;
-		}	
-		
+		}			
 	}
 	
-	@Override
 	public String toString(){
 		String s = "singleton: " + singleton + "\n";
 		s+= "needsLeftArgument: " + needsLeftArgument + "\n";
@@ -89,28 +89,51 @@ public class Type implements IType{
 		s+= "typeRight: " + typeRight;
 		return s;
 	}
-
 	
-	public Type mergeRight(){		
-		return new Type(typeLeft);
+	/*
+	 * correctType returns true if the typeComplete is wellFormed
+	 * this means that the brackets have an opening and ending bracket
+	 * and the only types used are np, n, s
+	 * the only other chars used are / and \\
+	 */
+	public boolean correctType(){
+		Stack<Character> s = new Stack<Character>();
+		String[] typesAllowed = {"np","n","s"}; 
+		
+		for(int i=0; i<typeComplete.length(); i++){
+			char c = typeComplete.charAt(i);
+			if(c == '('){
+				s.push('(');
+			}else if(c == ')' && s.pop() != '('){
+				return false;
+			}else if(i<typeComplete.length()-1 && contains(typesAllowed, ""+c+typeComplete.charAt(i+1))){
+					i++;
+					continue;
+			}else if(contains(typesAllowed, ""+c) || c == '\\' || c == '/'){
+				continue;
+			}else{
+				return false;
+			}
+		}
+		if(s.isEmpty()) return true;
+		else return false;
 	}
 	
-	public Type mergeLeft(){
-		return new Type(typeRight);
-	}
-	
-	@Override
-	public String example(){
-		Type t1 = new Type("(np/n)\\s");
-		System.out.println("example wordt daadwerkelijk aangeroepen");
-		//return "jaja";
-		return t1.toString();
+	/*
+	 * method written for correctType to check if an array contains a certain String
+	 */
+	private boolean contains(String[] myArr, String s){
+		for(int i=0; i<myArr.length; i++){
+			if(myArr[i].equals(s)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static void main(String[] args){
-		Type t1 = new Type("(np/n)\\s");
-		t1.example();
-		System.out.println(t1.example());
+		Type t1 = new Type("np\\s/np");
+		System.out.println(t1);
+		
 	}
-	
 }

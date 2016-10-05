@@ -13,12 +13,17 @@ import java.sql.PreparedStatement;
 
 public class DatabaseConnection{
 	private List<Element> database;
+	private String possibleInsert;
 	
 	String driverLocation = "com.mysql.jdbc.Driver";
 	String url = "jdbc:mysql://localhost:3306/";
 	String user = "root";
 	String password = "java2016";
-	String dbName = "testdb";
+	String dbName = "testdb";	
+	
+	public String getPossibleInsert(){
+		return this.possibleInsert;
+	}
 	
 	/*
 	 * createConnection does the following
@@ -54,7 +59,9 @@ public class DatabaseConnection{
 	
 	public List<Element> getDatabase(){
 		try{
+			//createConnection also sets the database
 			Connection con = createConnection();
+			
 			con.close();
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -87,36 +94,71 @@ public class DatabaseConnection{
 	 * insert is an overloaded method to add Element objects to the database, 
 	 * or to add just a word with its type. 
 	 */
-	public void insert(Element e){
-		try{
-			Connection con = createConnection();
-			
-			String sql = "insert into elements (word_sequence, type)" + " values (?,?)";
-			PreparedStatement statement = con.prepareStatement(sql);
-			
-			statement.setString(1, e.getWordSequence());
-			statement.setString(2, e.getType().typeComplete);				
-			statement.execute();	
-			
-			setDatabase(con);
-			con.close();
-		}catch(SQLException sqle){
-			sqle.printStackTrace();
-		}
-		
-	}
+//	public void insert(Element e){
+//		try{
+//			Connection con = createConnection();
+//			
+//			String sql = "insert into elements (word_sequence, type)" + " values (?,?)";
+//			PreparedStatement statement = con.prepareStatement(sql);
+//			
+//			
+//			statement.setString(1, e.getWordSequence());
+//			statement.setString(2, e.getType().typeComplete);				
+//			statement.execute();	
+//			
+//			setDatabase(con);
+//			con.close();
+//		}catch(SQLException sqle){
+//			sqle.printStackTrace();
+//		}
+//		
+//	}
 	public void insert(String wordSequence, String type){
+		//Use the value of possibleInsert to tell if it is not possible to insert the element
+		possibleInsert = "";
 		try{
 			Connection con = createConnection();
 			
-			String sql = "insert into elements (word_sequence, type)" + " values (?,?)";
-			PreparedStatement statement = con.prepareStatement(sql);
+			//first check if the element is included
+//			String sqlIncluded = "SELECT count(*) FROM elements WHERE word_sequence = ?";
+//			PreparedStatement statement = con.prepareStatement(sqlIncluded);
+//			statement.setString(1,wordSequence);
+//			ResultSet resultSet = statement.executeQuery();
+//			boolean isIncluded = resultSet.next();
+//			System.out.println(isIncluded);
+//			while(resultSet.next()){
+//				System.out.println("found another " + wordSequence);
+//			}
 			
-			statement.setString(1, wordSequence);
-			statement.setString(2, type);				
-			statement.execute();	
+			String sqlIncluded = "select * from elements";
+			PreparedStatement statement = con.prepareStatement(sqlIncluded);
+			ResultSet result = statement.executeQuery();
+			boolean isIncluded = false;
+			while(result.next()){
+				if(result.getString(1).equals(wordSequence)){
+					isIncluded = true;
+					break;
+				}
+			}
+
+			//If the word is not included and if the word has a valid type, you can add it.
+			if(isIncluded){
+				possibleInsert += "The database already contains the word "+ wordSequence;
+			}else if(!new Type(type).correctType()){
+				possibleInsert += "This type does not exist "+ type;
+			}else{
+
+				String sql = "insert into elements (word_sequence, type)" + " values (?,?)";
+				statement = con.prepareStatement(sql);
+				
+				statement.setString(1, wordSequence);
+				statement.setString(2, type);				
+				statement.execute();	
+				
+				setDatabase(con);
+				possibleInsert += "well done, you've just added the word "+ wordSequence + " to the database."; 
+			}
 			
-			setDatabase(con);
 			con.close();
 		}catch(SQLException sqle){
 			sqle.printStackTrace();
@@ -128,6 +170,7 @@ public class DatabaseConnection{
 		DatabaseConnection dbc = new DatabaseConnection();
 		dbc.insert("marie", "np");
 		System.out.println(dbc.database);
+		System.out.println(dbc.possibleInsert);
 	}
 
 }

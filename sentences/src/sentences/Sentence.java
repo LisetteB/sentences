@@ -98,4 +98,58 @@ public class Sentence {
 		Element combination = new Element(word_sequence, type);
 		return combination;
 	}
+	
+	/*
+	 * method sentenceSuggestion gives back a list of possible next words
+	 * First it checks if the first part of the sentence can be deduced to one type
+	 * if that's the case, then there's only one element in the result of the deduction.
+	 * If the first part of the sentence cannot be deduced to one type, 
+	 * also just use the last element to give suggestions
+	 * 
+	 * if the sentence is empty -> it's always a good idea to start with an np
+	 * 
+	 */
+	public List<Element> sentenceSuggestion(List<Element> database){
+		List<Element> suggestions = new ArrayList<>();
+		
+		List<Element> deductionResult = deduction();
+		if(deductionResult.size() > 0){
+			Type t = deductionResult.get(deductionResult.size()-1).getType();
+			suggestions = findElementSuggestions(t, database);
+		}else{
+			suggestions = findElementSuggestions(new Type("s/np"), database);
+		}
+		return suggestions;
+	}
+
+	/*
+	 * findElementSuggesions, traverses the database to find the next if elements
+	 * if the last element is a singleton type, find an element in the database that needs this type to its left
+	 * if the last element needs a certain right element, find an element in the database that is of this type
+	 * if the last element needs only a certain left element, something went wrong
+	 * (because it should have been there already) 
+	 * and it's impossible to finish the sentence, so the list of suggestions is empty.
+	 * 
+	 * Likewise if there were no suitable elements, the list of suggestions is empty.
+	 */
+	public List<Element> findElementSuggestions(Type t, List<Element> database) {
+		List<Element> suggestions = new ArrayList<>();
+		if(t.singleton){
+			for(int i=0; i<database.size(); i++){
+				Element elementi = database.get(i);
+				if(elementi.getType().needsLeftArgument && elementi.getType().typeLeft.equals(t.typeComplete)){
+					suggestions.add(elementi);
+				}
+			}
+		}else if(t.needsRightArgument){
+			String typeNeeded = t.typeRight;
+			for(int i=0; i<database.size(); i++){
+				Element elementi = database.get(i);
+				if(typeNeeded.equals(elementi.getType().typeComplete)){
+					suggestions.add(elementi);
+				}
+			}
+		}
+		return suggestions;
+	}
 }

@@ -7,10 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+
 import com.mysql.jdbc.Driver;
 
 import java.sql.PreparedStatement;
 
+@Named
+@RequestScoped
 public class DatabaseConnection{
 	private List<Element> database;
 	private String possibleInsert;
@@ -91,11 +96,50 @@ public class DatabaseConnection{
 	}
 	
 	/*
+	 * delete element based on wordSequence and type
+	 * or delete element based on wordSequence
+	 */
+	public void delete(Element e){		
+		try{
+			Connection con = createConnection();
+					
+			//delete the element in the database
+			String sql = "delete from elements where word_sequence = ? and type = ?";
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setString(1,e.getWordSequence());
+			statement.setString(2,e.getType().typeComplete);
+			statement.executeUpdate();
+			
+			setDatabase(con);
+			con.close();
+
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}		
+	}
+	public void delete(String wordSequence){
+		try{
+			Connection con = createConnection();
+					
+			//delete the element in the database
+			String sql = "delete from elements where word_sequence = ?";
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setString(1,wordSequence);
+			statement.executeUpdate();
+			
+			setDatabase(con);
+			con.close();
+
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}		
+	}
+	
+	/*
 	 * insert is an overloaded method to add an Element object to the database, 
 	 * you can use it either with an Element object, or just a String word and a String for the type
 	 * It tries to make the connection 
 	 */
-
 	public void insert(Element e){
 		insert(e.getWordSequence(),e.getType().typeComplete);
 	}
@@ -146,7 +190,7 @@ public class DatabaseConnection{
 	public static void main(String[] args){
 				
 		DatabaseConnection dbc = new DatabaseConnection();
-		dbc.insert("et", "(s)");
+		dbc.delete("marche");
 		System.out.println(dbc.database);
 		System.out.println(dbc.possibleInsert);
 	}

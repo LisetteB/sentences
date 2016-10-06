@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named
@@ -13,6 +14,10 @@ public class DatabaseController {
 	private String type;
 	private List<Element> database;
 	private String possibleInsert;
+	
+	@Inject
+	private DatabaseConnection dbc;
+	
 	
 	public String getPossibleInsert() {
 		return possibleInsert;
@@ -36,14 +41,18 @@ public class DatabaseController {
 	@PostConstruct
 	public void setDatabase(){
 		//System.out.println("tried to set the database");
-		DatabaseConnection dbc = new DatabaseConnection();
+		//DatabaseConnection dbc = new DatabaseConnection();
 		database = dbc.getDatabase();
 	}
 	public void insert(){
-		DatabaseConnection dbc = new DatabaseConnection();
+		//DatabaseConnection dbc = new DatabaseConnection();
 		dbc.insert(word, type);
 		possibleInsert = dbc.getPossibleInsert();
 		setDatabase();		
+	}
+	public void delete(Element e){
+		dbc.delete(e);
+		setDatabase();
 	}
 	
 }

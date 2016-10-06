@@ -28,10 +28,16 @@
 				<div class="col-md-2">
 					<h:commandButton action="#{sentenceChecker.checkSentence}" value="check sentence" class="btn btn-default"/>
 				</div>
+				<div class="col-md-2">
+					<h:commandButton action="#{sentenceChecker.elementSuggestions}" value="get suggestions" class="btn btn-default"/>
+				</div>
 			</div>
 			</div>
 			<h1>
 				<h:outputText value="#{sentenceChecker.result}" />
+			</h1>
+			<h1>
+				<h:outputText value="#{sentenceChecker.suggestions}" />
 			</h1>
 						
 		</h:form>
@@ -51,6 +57,10 @@
 				<f:facet name="header">type</f:facet>
 				#{_element.type.typeComplete}
 			</h:column>
+			<h:column>
+				<f:facet name="header">delete</f:facet>
+        		<h:commandButton value="delete" action="#{databaseController.delete(_element)}" class="btn btn-default"/>
+    		</h:column>
 		</h:dataTable>
 		</h:form>
 		</div>

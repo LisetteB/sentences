@@ -125,7 +125,7 @@ public class DatabaseConnection{
 			String sql = "delete from elements where word_sequence = ?";
 			PreparedStatement statement = con.prepareStatement(sql);
 			statement.setString(1,wordSequence);
-			statement.executeUpdate();
+			statement.executeUpdate();  
 			
 			setDatabase(con);
 			con.close();

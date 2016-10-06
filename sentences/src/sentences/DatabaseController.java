@@ -10,7 +10,7 @@ import javax.inject.Named;
 @Named
 @RequestScoped
 public class DatabaseController {
-	private String word;
+	private String word; 
 	private String type;
 	private List<Element> database;
 	private String possibleInsert;

@@ -64,7 +64,7 @@ public class SentenceChecker implements Serializable {
 	
 	
 	/*
-	 * method that calls the method sentenceSuggestions, 
+	 * method that calls the method sentenceSuggestions,   
 	 * to fill a list with possible next Elements
 	 */
 	public String elementSuggestions(){

@@ -115,7 +115,7 @@ public class Sentence {
 		List<Element> deductionResult = deduction();
 		if(deductionResult.size() > 0){
 			Type t = deductionResult.get(deductionResult.size()-1).getType();
-			suggestions = findElementSuggestions(t, database);
+			suggestions = findElementSuggestions(t, database);  
 		}else{
 			suggestions = findElementSuggestions(new Type("s/np"), database);
 		}
